@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+<VBox   maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="675.0" prefWidth="1200.0" stylesheets="/view/mainStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainController">
+   <children>
+      <HBox fx:id="top">
+         <children>
+             <ImageView fx:id="topImage" fitHeight="100" fitWidth="250">
+                 </ImageView>
+             <Label id="mainLabel" alignment="CENTER" prefHeight="100.0" minWidth="500" prefWidth="10000" text="MAKE YOUR BODY STRONGER">
+                 <font>
+                     <Font size="38.0" />
+                 </font>
+             </Label>
+             <VBox fx:id="exitPane" alignment="TOP_CENTER" minWidth="300" maxWidth="300" prefHeight="100.0" spacing="0" HBox.hgrow="ALWAYS">
+                 <children>
+                     <Label fx:id="labelUser" alignment="CENTER"  text="">
+                         <HBox.margin>
+                             <Insets right="10.0" />
+                         </HBox.margin>
+                         <VBox.margin>
+                             <Insets bottom="10.0" />
+                         </VBox.margin>
+                     </Label>
+                     <HBox alignment="CENTER" spacing="10.0">
+                         <children>
+                             <Button fx:id="buttonEdit" alignment="CENTER" contentDisplay="CENTER" layoutX="88.0"  onAction="#editProfile" mnemonicParsing="false" prefHeight="40.0"  text="Edit Profile">
+                             </Button>
+                             <Button fx:id="buttonLogOut" alignment="CENTER" contentDisplay="CENTER" layoutX="248.0" layoutY="-9.0" mnemonicParsing="false" onAction="#logOut"  text="LogOut" />
+                         </children>
+                     </HBox>
+                 </children>
+             </VBox>
+         </children>
+      </HBox>
+      <VBox  fx:id="generalWindow" prefHeight="8000.0" prefWidth="8000.0" >
+       <BorderPane fx:id="content" prefHeight="8000.0" prefWidth="8000.0" >
+           <VBox.margin>
+                   <Insets bottom="10.0" />
+           </VBox.margin>
+       </BorderPane>
+       <HBox alignment="CENTER" prefHeight="80.0" prefWidth="200.0">
+           <children>
+               <Button fx:id="buttonLeft" mnemonicParsing="false" onAction="#previusPage" prefHeight="50.0" prefWidth="200.0" text="Previous">
+                   <HBox.margin>
+                       <Insets right="30.0" />
+                   </HBox.margin>
+               </Button>
+               <Button fx:id="buttonRight" mnemonicParsing="false" onAction="#nextPage" prefHeight="50.0" prefWidth="200.0" text="Next">
+               </Button>
+           </children>
+       </HBox>
+       </VBox>
+   </children>
+</VBox>
