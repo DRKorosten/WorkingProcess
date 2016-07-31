@@ -5,8 +5,6 @@
 #generalWindow{
     -fx-background-image: url("mainBack.png");
     -fx-background-size: cover, auto;
-    /*-fx-background-size: 1210 585;*/
-    /*-fx-background-position: bottom;*/
     -fx-background-repeat: no-repeat;
 }
 #mainLabel{

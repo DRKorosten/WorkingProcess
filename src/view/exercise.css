@@ -1,0 +1,12 @@
+.scroll-pane > .viewport{
+    -fx-background-image: url("exercise_back.jpeg");
+    -fx-background-size: cover, auto;
+    -fx-background-repeat: no-repeat;
+}
+.label{
+    -fx-text-fill: gold;
+}
+#description{
+    -fx-font-size: 22;
+    -fx-fill: lightgray;
+}

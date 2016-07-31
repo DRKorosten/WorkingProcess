@@ -3,6 +3,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.effect.BoxBlur;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -39,7 +41,6 @@ public class Exercise implements ContentElement{
     public ScrollPane getContent() throws Exception {
         if (!name.equals(null)&&!description.equals(null)&&!imagePath.equals(null)&&!videoPath.equals(null)&&!type.equals(null)){
                 ScrollPane content  = new ScrollPane();
-                content.setStyle("-fx-background-color: rgba(0, 100, 100, 0.0)");
                 content.setFitToHeight(true);
                 content.setFitToWidth(true);
                 VBox vBox = new VBox(10);
@@ -54,66 +55,81 @@ public class Exercise implements ContentElement{
                 ImageView imageView = new ImageView(image);
                 imageView.fitHeightProperty().bind(content.heightProperty().multiply(0.755).multiply(0.75));
                 imageView.fitWidthProperty().bind(content.widthProperty().multiply(0.567).multiply(0.75));
+                StackPane video = new StackPane();
+                video.setAlignment(Pos.CENTER);
                 Media media = new Media(getClass().getResource("/exercise/" +videoPath).toString());
                 MediaPlayer mediaPlayer = new MediaPlayer(media);
                 MediaView mediaView= new MediaView(mediaPlayer);
                 mediaView.fitWidthProperty().bind(imageView.fitWidthProperty());
                 mediaView.fitHeightProperty().bind(imageView.fitWidthProperty());
+                Image playButton = new Image(getClass().getResource("/view/playbutton.png").toString());
+                ImageView playButtonView = new ImageView(playButton);
+                playButtonView.setOpacity(0.5);
+                playButtonView.setFitHeight(100);
+                playButtonView.setFitWidth(100);
+                video.getChildren().addAll(mediaView,playButtonView);
+                video.setOnMouseClicked(event -> {
+                if (playButtonView.getOpacity()==0.5) {
+                    playButtonView.setOpacity(0);
+                    mediaPlayer.play();
+                } else {
+                    playButtonView.setOpacity(0.5);
+                    mediaPlayer.pause();
+                }
+            });
                 pane.getChildren().addAll(imageView);
                 HBox hBox = new HBox(10);
-                Button play = new Button("Play");
-                play.setVisible(false);
-                play.setOnAction(event -> {
-                    if (play.getText().equals("Play")) {
-                        play.setText("Pause");
-                        mediaPlayer.play();
-                    } else {
-                        play.setText("Play");
-                        mediaPlayer.pause();
-                    }
+                ImageView imageViewPreview = new ImageView(image);
+                imageViewPreview.fitHeightProperty().bind(imageView.fitHeightProperty().multiply(0.25));
+                imageViewPreview.fitWidthProperty().bind(imageView.fitWidthProperty().multiply(0.25));
+                Media mediaPreview = new Media(getClass().getResource("/exercise/" +videoPath).toString());
+                MediaPlayer mediaPlayerPreview = new MediaPlayer(mediaPreview);
+                mediaPlayerPreview.setOnReady(() -> {
+                    mediaPlayerPreview.seek(Duration.seconds(2));
                 });
-                ImageView imageView1 = new ImageView(image);
-                imageView1.fitHeightProperty().bind(imageView.fitHeightProperty().multiply(0.25));
-                imageView1.fitWidthProperty().bind(imageView.fitWidthProperty().multiply(0.25));
-                Media media1 = new Media(getClass().getResource("/exercise/" +videoPath).toString());
-                MediaPlayer mediaPlayer1 = new MediaPlayer(media1);
-                mediaPlayer1.setOnReady(() -> {
-                    mediaPlayer1.seek(Duration.seconds(2));
-                });
-                StackPane videoImage = new StackPane();
-                videoImage.setAlignment(Pos.CENTER);
-                Image playbutton = new Image(getClass().getResource("/view/playbutton.png").toString());
-                ImageView playButtonView = new ImageView(playbutton);
-                playButtonView.setFitHeight(40);
-                playButtonView.setFitWidth(40);
-                MediaView mediaView1= new MediaView(mediaPlayer1);
-                mediaView1.fitWidthProperty().bind(imageView1.fitWidthProperty());
-                mediaView1.fitHeightProperty().bind(imageView1.fitWidthProperty());
-                videoImage.getChildren().addAll(mediaView1,playButtonView);
-                videoImage.setOnMouseClicked(event -> {
+                StackPane videoPreview = new StackPane();
+                videoPreview.setAlignment(Pos.CENTER);
+                Image playButtonSmall = new Image(getClass().getResource("/view/playbutton.png").toString());
+                ImageView playButtonViewSmall = new ImageView(playButtonSmall);
+                playButtonViewSmall.setFitHeight(40);
+                playButtonViewSmall.setFitWidth(40);
+                MediaView mediaViewPreview= new MediaView(mediaPlayerPreview);
+                mediaViewPreview.fitWidthProperty().bind(imageViewPreview.fitWidthProperty());
+                mediaViewPreview.fitHeightProperty().bind(imageViewPreview.fitWidthProperty());
+                videoPreview.getChildren().addAll(mediaViewPreview,playButtonViewSmall);
+                BoxBlur blurEffect = new BoxBlur(5,5,1);
+                videoPreview.setEffect(blurEffect);
+                videoPreview.setOnMouseClicked(event -> {
                     if (pane.getChildren().contains(imageView)){
                         pane.getChildren().remove(imageView);
-                        pane.getChildren().add(mediaView);
-                        play.setVisible(true);
+                        imageViewPreview.setEffect(blurEffect);
+                        videoPreview.setEffect(null);
+                        videoPreview.setStyle("-fx-border-width: 2;-fx-border-color: chartreuse");
+                        imageViewPreview.setStyle("-fx-padding: 0;");
+                        pane.getChildren().add(video);
                     }
                 });
-                imageView1.setOnMouseClicked(event -> {
-                    if (pane.getChildren().contains(mediaView)){
+                imageViewPreview.setOnMouseClicked(event -> {
+                    if (pane.getChildren().contains(video)){
                         mediaView.getMediaPlayer().stop();
-                        pane.getChildren().remove(mediaView);
+                        imageViewPreview.setEffect(null);
+                        videoPreview.setEffect(blurEffect);
+                        imageViewPreview.setStyle("-fx-padding: 10;\n" +
+                                "-fx-background-color: chartreuse;");
+                        videoPreview.setStyle("-fx-border-width: 0");
+                        pane.getChildren().remove(video);
                         pane.getChildren().add(imageView);
-                        play.setVisible(false);
                     }
                 });
                 hBox.setAlignment(Pos.CENTER);
-                hBox.getChildren().addAll(play,imageView1,videoImage);
+                hBox.getChildren().addAll(imageViewPreview,videoPreview);
                 Text text = new Text(description);
+                text.setId("description");
                 text.setTextAlignment(TextAlignment.CENTER);
-                text.setFont(Font.font(16));
                 text.wrappingWidthProperty().bind(content.widthProperty().divide(1.2));
                 vBox.getChildren().addAll(title,pane,hBox,text);
                 content.setContent(vBox);
-                content.setStyle("-fx-background: rgb(80,80,80)");
+                content.getStylesheets().add("/view/exercise.css");
                 return content;
         }else{
             throw new Exception();
