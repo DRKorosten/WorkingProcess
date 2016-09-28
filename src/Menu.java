@@ -14,9 +14,9 @@ public class Menu implements ContentElement{
     int counter;
     int rows;
     ArrayList<ContentElement> menuElements;
-    public Menu(ArrayList<ContentElement> contentElements)
+    public Menu(int number)
     {
-    counter = contentElements.size();
+    counter = number;
 }
     public ScrollPane createMenu(){
         ScrollPane content = new ScrollPane();

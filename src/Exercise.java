@@ -1,10 +1,8 @@
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.BoxBlur;
-import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -53,81 +51,79 @@ public class Exercise implements ContentElement{
                 vBox.maxWidthProperty().bind(content.widthProperty());
                 Image image = new Image(getClass().getResource("/exercise/" +imagePath).toString());
                 ImageView imageView = new ImageView(image);
-                imageView.fitHeightProperty().bind(content.heightProperty().multiply(0.755).multiply(0.75));
-                imageView.fitWidthProperty().bind(content.widthProperty().multiply(0.567).multiply(0.75));
-                StackPane video = new StackPane();
-                video.setAlignment(Pos.CENTER);
-                Media media = new Media(getClass().getResource("/exercise/" +videoPath).toString());
-                MediaPlayer mediaPlayer = new MediaPlayer(media);
-                MediaView mediaView= new MediaView(mediaPlayer);
-                mediaView.fitWidthProperty().bind(imageView.fitWidthProperty());
-                mediaView.fitHeightProperty().bind(imageView.fitWidthProperty());
-                Image playButton = new Image(getClass().getResource("/view/playbutton.png").toString());
-                ImageView playButtonView = new ImageView(playButton);
-                playButtonView.setOpacity(0.5);
-                playButtonView.setFitHeight(100);
-                playButtonView.setFitWidth(100);
-                video.getChildren().addAll(mediaView,playButtonView);
-                video.setOnMouseClicked(event -> {
-                if (playButtonView.getOpacity()==0.5) {
-                    playButtonView.setOpacity(0);
-                    mediaPlayer.play();
-                } else {
-                    playButtonView.setOpacity(0.5);
-                    mediaPlayer.pause();
-                }
-            });
-                pane.getChildren().addAll(imageView);
+                imageView.setFitHeight(250);
+                imageView.setFitWidth(450);
+                StackPane imagePane = new StackPane();
+                imagePane.setStyle("-fx-border-width: 3; -fx-border-color: gold; -fx-border-radius: 3");
+                imagePane.setMaxWidth(450);
+                imagePane.getChildren().addAll(imageView);
+                Video videoHolder = new Video(getClass().getResource("/exercise/" +videoPath).toString());
+                StackPane video = videoHolder.getStackPane();
+                pane.getChildren().addAll(imagePane);
                 HBox hBox = new HBox(10);
+                StackPane imagePreview = new StackPane();
+                imagePreview.setStyle("-fx-background-color: chartreuse;-fx-background-radius: 2; -fx-padding: 2");
                 ImageView imageViewPreview = new ImageView(image);
-                imageViewPreview.fitHeightProperty().bind(imageView.fitHeightProperty().multiply(0.25));
-                imageViewPreview.fitWidthProperty().bind(imageView.fitWidthProperty().multiply(0.25));
+                imageViewPreview.setFitHeight(90);
+                imageViewPreview.setFitWidth(160);
                 Media mediaPreview = new Media(getClass().getResource("/exercise/" +videoPath).toString());
                 MediaPlayer mediaPlayerPreview = new MediaPlayer(mediaPreview);
                 mediaPlayerPreview.setOnReady(() -> {
-                    mediaPlayerPreview.seek(Duration.seconds(2));
+                    mediaPlayerPreview.seek(Duration.seconds(20));
                 });
                 StackPane videoPreview = new StackPane();
                 videoPreview.setAlignment(Pos.CENTER);
+                Text textVideo = new Text("Video");
+                textVideo.setFont(new Font(30));
+                textVideo.setStyle("-fx-fill:#f99000;-fx-stroke: black");
                 Image playButtonSmall = new Image(getClass().getResource("/view/playbutton.png").toString());
                 ImageView playButtonViewSmall = new ImageView(playButtonSmall);
                 playButtonViewSmall.setFitHeight(40);
                 playButtonViewSmall.setFitWidth(40);
                 MediaView mediaViewPreview= new MediaView(mediaPlayerPreview);
-                mediaViewPreview.fitWidthProperty().bind(imageViewPreview.fitWidthProperty());
-                mediaViewPreview.fitHeightProperty().bind(imageViewPreview.fitWidthProperty());
-                videoPreview.getChildren().addAll(mediaViewPreview,playButtonViewSmall);
+                mediaViewPreview.setFitHeight(90);
+                videoPreview.getChildren().addAll(mediaViewPreview,playButtonViewSmall,textVideo);
+                videoPreview.setAlignment(textVideo,Pos.TOP_CENTER);
                 BoxBlur blurEffect = new BoxBlur(5,5,1);
-                videoPreview.setEffect(blurEffect);
+                mediaViewPreview.setEffect(blurEffect);
                 videoPreview.setOnMouseClicked(event -> {
-                    if (pane.getChildren().contains(imageView)){
-                        pane.getChildren().remove(imageView);
+                    if (pane.getChildren().contains(imagePane)){
+                        pane.getChildren().remove(imagePane);
                         imageViewPreview.setEffect(blurEffect);
-                        videoPreview.setEffect(null);
+                        mediaViewPreview.setEffect(null);
                         videoPreview.setStyle("-fx-border-width: 2;-fx-border-color: chartreuse");
-                        imageViewPreview.setStyle("-fx-padding: 0;");
+                        imagePreview.setStyle(null);
                         pane.getChildren().add(video);
                     }
                 });
-                imageViewPreview.setOnMouseClicked(event -> {
+                imagePreview.setOnMouseClicked(event -> {
                     if (pane.getChildren().contains(video)){
-                        mediaView.getMediaPlayer().stop();
+                        videoHolder.stop();
                         imageViewPreview.setEffect(null);
-                        videoPreview.setEffect(blurEffect);
-                        imageViewPreview.setStyle("-fx-padding: 10;\n" +
-                                "-fx-background-color: chartreuse;");
+                        mediaViewPreview.setEffect(blurEffect);
+                        imagePreview.setStyle("-fx-background-color: chartreuse;-fx-background-radius: 2; -fx-padding: 2");
                         videoPreview.setStyle("-fx-border-width: 0");
                         pane.getChildren().remove(video);
-                        pane.getChildren().add(imageView);
+                        pane.getChildren().add(imagePane);
                     }
                 });
                 hBox.setAlignment(Pos.CENTER);
-                hBox.getChildren().addAll(imageViewPreview,videoPreview);
+                Text textPhoto = new Text("Photo");
+                textPhoto.setFont(new Font(30));
+                textPhoto.setStyle("-fx-fill:#f99000;-fx-stroke: black");
+                imagePreview.setAlignment(textPhoto,Pos.TOP_CENTER);
+                imagePreview.getChildren().addAll(imageViewPreview,textPhoto);
+                hBox.getChildren().addAll(imagePreview,videoPreview);
+                StackPane textPane = new StackPane();
+                textPane.setAlignment(Pos.CENTER);
                 Text text = new Text(description);
+                text.setStyle("-fx-fill: black");
                 text.setId("description");
                 text.setTextAlignment(TextAlignment.CENTER);
-                text.wrappingWidthProperty().bind(content.widthProperty().divide(1.2));
-                vBox.getChildren().addAll(title,pane,hBox,text);
+                text.wrappingWidthProperty().bind(content.widthProperty().divide(1.1));
+                textPane.getChildren().addAll(text);
+                textPane.setStyle("-fx-background-color: rgba(255, 255, 255,0.6);-fx-background-radius: 50;");
+                vBox.getChildren().addAll(title,pane,hBox,textPane);
                 content.setContent(vBox);
                 content.getStylesheets().add("/view/exercise.css");
                 return content;

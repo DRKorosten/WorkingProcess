@@ -88,13 +88,6 @@ public  class MainController {
 //            getProgramExercises(order);
 //            }
 //        }
-//        Exercise exercise = new Exercise("Жим лёжа","Да да","1/img.jpg","1/video.mp4", Type.BASE);
-//        try {
-//            pages.add(exercise.getContent());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        pages.add(createMaxWeightPane());
 
         ArrayList<Exercise> exercises = getProgramExercises(1);
         for (Exercise contentElement:exercises ) {
@@ -104,6 +97,8 @@ public  class MainController {
                 e.printStackTrace();
             }
         }
+//        Menu menu = new Menu(5);
+//        pages.add(menu.createMenu());
         current = 0;
 
         content.setCenter(pages.get(current));

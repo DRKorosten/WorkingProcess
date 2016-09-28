@@ -26,10 +26,19 @@ public class TestMWP extends Application{
 //        }
 //        MaxWeightData data = new MaxWeightData(exercises);
 //        MaxWeightPane maxWeightPane = new MaxWeightPane(data.getData());
-//        Pane bp = new Pane();
-//        Media media = new Media(getClass().getResource("main.jpg").toString());
-//        MediaPlayer mediaPlayer= new MediaPlayer(media);
-//        MediaView mediaView = new MediaView(mediaPlayer);
+        Pane bp = new Pane();
+        Media media = new Media("file:///C:/Users/Dmytro/Desktop/main/src/exercise/2/video.mp4");
+        MediaPlayer mediaPlayer= new MediaPlayer(media);
+        MediaView mediaView = new MediaView(mediaPlayer);
+        mediaView.setOnMouseClicked(event -> {
+            mediaPlayer.dispose();
+            mediaPlayer.stop();
+            mediaPlayer.play();
+            if (mediaPlayer.getStatus().equals(MediaPlayer.Status.PLAYING)){
+                System.out.println("asdsadas");
+            }
+            System.out.println(mediaPlayer.getStatus());
+        });
 //        mediaPlayer.setOnReady(() -> {
 //            System.out.println(media.getHeight()+" "+media.getWidth());
 //            mediaView.setFitWidth(1000);
@@ -38,19 +47,19 @@ public class TestMWP extends Application{
 //            mediaView.setStyle("-fx-background-color: blue; -fx-border-width: 3px");
 //
 //        });
-//        bp.getChildren().add(mediaView);
-//        mediaPlayer.setAutoPlay(true);
+        bp.getChildren().add(mediaView);
+        mediaPlayer.setAutoPlay(true);
 //        bp.setPrefSize(Screen.getPrimary().getBounds().getWidth()-150,Screen.getPrimary().getBounds().getHeight()-150);
 
 //        Menu menu = new Menu(5);
 //        ScrollPane pane = menu.createMenu();
 //        pane.setPrefSize(500,500);
-//        Scene scene = new Scene(pane);
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
+        Scene scene = new Scene(bp);
+        primaryStage.setScene(scene);
+        primaryStage.show();
 //
     }
-//    public static void main(String[] args) {
-//        launch(args);
-//    }
+    public static void main(String[] args) {
+        launch(args);
+    }
 }
